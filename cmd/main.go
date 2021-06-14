@@ -4,11 +4,11 @@ import (
 	"os"
 	"context"
 	"github.com/GoogleCloudPlatform/functions-framework-go/funcframework"
-	"github.com/hcchang0701/portfolio-tracker/functions"
+	"github.com/hcchang0701/portfolio-tracker/src/functions"
 )
 func main() {
 	ctx := context.Background()
-	if err := funcframework.RegisterHTTPFunctionContext(ctx, "/", functions.ListBalance); err != nil {
+	if err := funcframework.RegisterHTTPFunctionContext(ctx, "/", functions.UpdateTxHistory); err != nil {
 		log.Fatalf("funcframework.RegisterHTTPFunctionContext: %v\n", err)
 	}
 	// Use PORT environment variable, or default to 8080.

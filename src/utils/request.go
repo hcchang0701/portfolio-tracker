@@ -1,4 +1,4 @@
-package functions
+package utils
 
 import (
 	"crypto/hmac"
@@ -9,11 +9,10 @@ import (
 	"net/url"
 )
 
-const genesis = 1613865600000
 const binance_api_key = "QsoqKGt4xku8xoUCqSZG7YYWeOqjjyUSIdbbLQlGwpZQSvJK6m9bqNkSnOlgbHvj"
 const binance_api_secret = "m4h1k5jNDregkjqa0lW5KmoOKFhK0Hklm6cVJeLNO7B7OcmSSQVnhfgBQmj59O4R"
 
-var client = &http.Client{}
+var httpClient = &http.Client{}
 
 func hmacSha256(data string, secret string) string {
 	h := hmac.New(sha256.New, []byte(secret))
@@ -29,7 +28,7 @@ func addAPIKey(header http.Header) {
 	header.Set("X-MBX-APIKEY", binance_api_key)
 }
 
-func doGet(url string, params map[string]string) ([]byte, error) {
+func DoGet(url string, params map[string]string) ([]byte, error) {
 
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
 	addAPIKey(req.Header)
@@ -42,7 +41,7 @@ func doGet(url string, params map[string]string) ([]byte, error) {
 	addSignature(query)
 	req.URL.RawQuery = query.Encode()
 
-	res, err := client.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

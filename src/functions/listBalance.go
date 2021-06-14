@@ -4,7 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/hcchang0701/portfolio-tracker/src/utils"
 )
+
+type Account struct {
+	Balances []struct {
+		Asset  string `json:"asset"`
+		Free   string `json:"free"`
+		Locked string `json:"locked"`
+	} `json:"balances"`
+}
 
 func ListBalance(w http.ResponseWriter, r *http.Request) {
 	const url = "https://api.binance.com/api/v3/account"
@@ -13,7 +23,7 @@ func ListBalance(w http.ResponseWriter, r *http.Request) {
 		"recvWindow": "1000",
 	}
 
-	res, err := doGet(url, params)
+	res, err := utils.DoGet(url, params)
 	if err != nil {
 		fmt.Fprint(w, err)
 		return
