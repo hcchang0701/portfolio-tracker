@@ -8,6 +8,7 @@ import (
 	"net/http"
 	//"sort"
 	"time"
+	"unicode"
 	//"google.golang.org/api/option"
 )
 
@@ -31,7 +32,12 @@ const genesis = 1613865600000
 
 func UpdateTxHistory(w http.ResponseWriter, r *http.Request) {
 
-	symbol := "ATOMUSDT"
+	symbol := r.URL.Query().Get("symbol");
+	if !isUpperCase(symbol) {
+		fmt.Fprint(w, "Error: symbol must be uppercase")
+		return
+	}
+
 	ts, err := getLastUpdateTimestamp(symbol)
 	if err != nil {
 		fmt.Fprint(w, err)
@@ -50,6 +56,15 @@ func UpdateTxHistory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprint(w, fmt.Sprintf("%d of %s records updated", len(res), symbol))
+}
+
+func isUpperCase(s string) bool {
+	for _, r := range s {
+		if !unicode.IsUpper(r) && unicode.IsLetter(r) {
+			return false
+		}
+	}
+	return true
 }
 
 func getLastUpdateTimestamp(symbol string) (int64, error) {
